@@ -12,7 +12,7 @@ import { MobileMenu } from "./MobileMenu";
 import { navItems } from "./navData";
 
 export function Navbar() {
-  const isScrolled = useScrollPosition(20);
+  const isScrolled = useScrollPosition(10);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -28,14 +28,17 @@ export function Navbar() {
   const handleMouseLeave = useCallback(() => {
     closeTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
-    }, 150);
+    }, 120);
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
     setIsMobileMenuOpen((prev) => !prev);
   }, []);
 
-  // Close dropdown / mobile menu on Escape
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -47,7 +50,6 @@ export function Navbar() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Close mobile menu on resize past lg breakpoint
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMobileMenuOpen(false);
@@ -56,7 +58,6 @@ export function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
     return () => {
@@ -68,15 +69,16 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
+          "fixed top-0 left-0 right-0 z-50",
+          "transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out",
           isScrolled || isMobileMenuOpen
-            ? "bg-white/40 backdrop-blur-xl border-b border-black/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+            ? "bg-white/80 backdrop-blur-2xl border-b border-black/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
             : "bg-transparent border-b border-transparent"
         )}
       >
         <Container>
           <nav
-            className="flex h-[72px] items-center justify-between"
+            className="flex h-[72px] items-center justify-between gap-4"
             role="navigation"
             aria-label="Main navigation"
           >
@@ -84,7 +86,7 @@ export function Navbar() {
             <Logo />
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-0.5">
               {navItems.map((item) => (
                 <div
                   key={item.label}
@@ -97,11 +99,11 @@ export function Navbar() {
                   {item.dropdown ? (
                     <button
                       className={cn(
-                        "flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg",
-                        "transition-colors duration-150",
-                        "hover:text-[#3448FF] focus-visible:text-[#3448FF]",
+                        "flex items-center gap-1 px-3.5 py-2 text-[13.5px] font-semibold rounded-lg cursor-pointer",
+                        "transition-all duration-150",
+                        "hover:text-[#3448FF] hover:bg-[#3448FF]/[0.04]",
                         activeDropdown === item.label
-                          ? "text-[#3448FF]"
+                          ? "text-[#3448FF] bg-[#3448FF]/[0.04]"
                           : "text-[#1a1a2e]"
                       )}
                       onClick={() =>
@@ -124,7 +126,7 @@ export function Navbar() {
                   ) : (
                     <a
                       href={item.href || "#"}
-                      className="flex items-center px-3 py-2 text-sm font-medium text-[#1a1a2e] rounded-lg transition-colors duration-150 hover:text-[#3448FF]"
+                      className="flex items-center px-3.5 py-2 text-[13.5px] font-semibold text-[#1a1a2e] rounded-lg transition-all duration-150 hover:text-[#3448FF] hover:bg-[#3448FF]/[0.04]"
                     >
                       {item.label}
                     </a>
@@ -142,15 +144,18 @@ export function Navbar() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2.5">
               <Button variant="ghost" size="sm">
                 Sign In
+              </Button>
+              <Button variant="secondary" size="sm">
+                Sign Up
               </Button>
 
               {/* Primary CTA — sonar rotating border effect */}
               <div className="relative rounded-full overflow-hidden p-[1.5px] group">
                 <div
-                  className="sonar-border absolute inset-[-20%] opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                  className="sonar-border absolute inset-[-20%] opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                   aria-hidden="true"
                 />
                 <Button variant="primary" size="md" className="relative">
@@ -161,7 +166,12 @@ export function Navbar() {
 
             {/* Mobile Menu Toggle */}
             <button
-              className="flex lg:hidden items-center justify-center h-10 w-10 rounded-lg text-[#1a1a2e] transition-colors hover:bg-[#f4f6f8]"
+              className={cn(
+                "flex lg:hidden items-center justify-center h-10 w-10 rounded-lg transition-colors cursor-pointer",
+                isMobileMenuOpen
+                  ? "text-[#3448FF] bg-[#3448FF]/[0.06]"
+                  : "text-[#1a1a2e] hover:bg-[#f4f6f8]"
+              )}
               onClick={toggleMobileMenu}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMobileMenuOpen}
@@ -175,7 +185,11 @@ export function Navbar() {
         </Container>
       </header>
 
-      <MobileMenu isOpen={isMobileMenuOpen} items={navItems} />
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        items={navItems}
+        onClose={closeMobileMenu}
+      />
 
       {/* Background overlay when mobile menu is open */}
       <div
@@ -185,7 +199,7 @@ export function Navbar() {
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         )}
-        onClick={toggleMobileMenu}
+        onClick={closeMobileMenu}
         aria-hidden="true"
       />
     </>
