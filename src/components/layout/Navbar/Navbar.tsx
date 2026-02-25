@@ -16,7 +16,6 @@ export function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const navRef = useRef<HTMLElement>(null);
 
   const handleMouseEnter = useCallback((label: string) => {
     if (closeTimeoutRef.current) {
@@ -36,24 +35,30 @@ export function Navbar() {
     setIsMobileMenuOpen((prev) => !prev);
   }, []);
 
-  // Close mobile menu on resize to desktop
+  // Close dropdown / mobile menu on Escape
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveDropdown(null);
         setIsMobileMenuOpen(false);
       }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Close mobile menu on resize past lg breakpoint
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setIsMobileMenuOpen(false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -62,12 +67,11 @@ export function Navbar() {
   return (
     <>
       <header
-        ref={navRef}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out",
           isScrolled || isMobileMenuOpen
-            ? "bg-white/90 backdrop-blur-[32px] shadow-[0_1px_0_rgba(0,0,0,0.05)]"
-            : "bg-transparent"
+            ? "bg-white/40 backdrop-blur-xl border-b border-black/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+            : "bg-transparent border-b border-transparent"
         )}
       >
         <Container>
@@ -93,11 +97,18 @@ export function Navbar() {
                   {item.dropdown ? (
                     <button
                       className={cn(
-                        "flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors duration-150 rounded-lg hover:text-[#3448FF]",
+                        "flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg",
+                        "transition-colors duration-150",
+                        "hover:text-[#3448FF] focus-visible:text-[#3448FF]",
                         activeDropdown === item.label
                           ? "text-[#3448FF]"
                           : "text-[#1a1a2e]"
                       )}
+                      onClick={() =>
+                        setActiveDropdown(
+                          activeDropdown === item.label ? null : item.label
+                        )
+                      }
                       aria-expanded={activeDropdown === item.label}
                       aria-haspopup="true"
                     >
@@ -113,7 +124,7 @@ export function Navbar() {
                   ) : (
                     <a
                       href={item.href || "#"}
-                      className="flex items-center px-3 py-2 text-sm font-medium text-[#1a1a2e] transition-colors duration-150 rounded-lg hover:text-[#3448FF]"
+                      className="flex items-center px-3 py-2 text-sm font-medium text-[#1a1a2e] rounded-lg transition-colors duration-150 hover:text-[#3448FF]"
                     >
                       {item.label}
                     </a>
@@ -123,6 +134,7 @@ export function Navbar() {
                     <NavDropdown
                       items={item.dropdown}
                       isOpen={activeDropdown === item.label}
+                      onClose={() => setActiveDropdown(null)}
                     />
                   )}
                 </div>
@@ -134,9 +146,17 @@ export function Navbar() {
               <Button variant="ghost" size="sm">
                 Sign In
               </Button>
-              <Button variant="primary" size="md">
-                Schedule a Demo
-              </Button>
+
+              {/* Primary CTA — sonar rotating border effect */}
+              <div className="relative rounded-full overflow-hidden p-[1.5px] group">
+                <div
+                  className="sonar-border absolute inset-[-20%] opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                  aria-hidden="true"
+                />
+                <Button variant="primary" size="md" className="relative">
+                  Schedule a Demo
+                </Button>
+              </div>
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -155,10 +175,9 @@ export function Navbar() {
         </Container>
       </header>
 
-      {/* Mobile Menu */}
       <MobileMenu isOpen={isMobileMenuOpen} items={navItems} />
 
-      {/* Overlay */}
+      {/* Background overlay when mobile menu is open */}
       <div
         className={cn(
           "fixed inset-0 z-30 bg-black/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden",

@@ -7,23 +7,30 @@ import type { Integration } from "./integrationsData";
 interface IntegrationCardProps {
   integration: Integration;
   index: number;
+  isVisible: boolean;
 }
 
-export function IntegrationCard({ integration, index }: IntegrationCardProps) {
+export function IntegrationCard({
+  integration,
+  index,
+  isVisible,
+}: IntegrationCardProps) {
   return (
     <div
       className={cn(
         "group relative flex flex-col items-center gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm",
         "transition-all duration-300 ease-out",
         "hover:border-white/[0.12] hover:bg-white/[0.06] hover:shadow-[0_8px_32px_rgba(0,0,0,0.2)]",
-        "hover:-translate-y-1"
+        "hover:-translate-y-1",
+        isVisible && "animate-card-reveal"
       )}
-      style={{
-        animationDelay: `${index * 60}ms`,
-      }}
+      style={{ animationDelay: `${200 + index * 60}ms` }}
     >
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
+      {/* Glow overlay on hover */}
+      <div
+        className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gradient-to-b from-[#3448FF]/[0.04] to-transparent pointer-events-none"
+        aria-hidden="true"
+      />
 
       {/* Logo */}
       <div className="relative flex h-14 w-14 items-center justify-center rounded-xl bg-white/[0.06] transition-all duration-300 group-hover:bg-white/[0.1] group-hover:scale-110">

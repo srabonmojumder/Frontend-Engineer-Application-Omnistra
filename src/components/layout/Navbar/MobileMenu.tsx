@@ -56,6 +56,7 @@ function MobileNavSection({ item }: { item: NavItem }) {
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex w-full items-center justify-between px-3 py-3 text-base font-medium text-[#1a1a2e] transition-colors hover:text-[#3448FF]"
+        aria-expanded={isExpanded}
       >
         {item.label}
         <NavIcon
@@ -68,7 +69,7 @@ function MobileNavSection({ item }: { item: NavItem }) {
       </button>
       <div
         className={cn(
-          "overflow-hidden transition-all duration-300 ease-out",
+          "overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           isExpanded ? "max-h-[500px] opacity-100 pb-2" : "max-h-0 opacity-0"
         )}
       >
@@ -88,15 +89,19 @@ function MobileNavSection({ item }: { item: NavItem }) {
 export function MobileMenu({ isOpen, items }: MobileMenuProps) {
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mobile navigation"
       className={cn(
-        "fixed inset-x-0 top-[72px] bottom-0 z-40 overflow-y-auto bg-white transition-all duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] lg:hidden",
+        "fixed inset-x-0 top-[72px] bottom-0 z-40 overflow-y-auto bg-white",
+        "transition-all duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] lg:hidden",
         isOpen
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 -translate-y-4 pointer-events-none"
       )}
     >
       <div className="flex flex-col px-4 pb-8 pt-4">
-        <nav className="flex flex-col">
+        <nav className="flex flex-col" aria-label="Mobile navigation">
           {items.map((item) => (
             <MobileNavSection key={item.label} item={item} />
           ))}

@@ -46,7 +46,7 @@ body {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -56,4 +56,39 @@ body {
 
 .animate-fade-in-up {
   animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Sonar button — rotating conic-gradient border (chargeflow CTA signature) */
+@keyframes border-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sonar-border {
+  animation: border-spin 3s linear infinite;
+  background: conic-gradient(
+    from 0deg,
+    #3448FF,
+    transparent 25%,
+    transparent 75%,
+    #3448FF
+  );
+}
+
+/* Staggered card entrance for integrations grid */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-reveal {
+  animation: cardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
 }

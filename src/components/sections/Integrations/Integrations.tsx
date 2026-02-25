@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/cn";
+import { useInView } from "@/hooks/useInView";
 import { Container } from "@/components/ui/Container";
 import { IntegrationCard } from "./IntegrationCard";
 import {
@@ -13,6 +14,9 @@ import {
 export function Integrations() {
   const [activeCategory, setActiveCategory] =
     useState<IntegrationCategory>("All");
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+    threshold: 0.05,
+  });
 
   const filteredIntegrations = useMemo(
     () =>
@@ -24,16 +28,16 @@ export function Integrations() {
 
   return (
     <section
+      ref={sectionRef}
       id="integrations"
       className="relative overflow-hidden bg-[#0a0a0f] py-24 sm:py-32"
     >
       {/* Background effects */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Radial gradient glow */}
         <div className="absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3448FF]/[0.07] blur-[120px]" />
         <div className="absolute bottom-0 right-0 h-[400px] w-[600px] translate-x-1/4 translate-y-1/4 rounded-full bg-violet-500/[0.04] blur-[100px]" />
 
-        {/* Grid pattern */}
+        {/* Grid pattern overlay */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -46,7 +50,14 @@ export function Integrations() {
 
       <Container className="relative z-10">
         {/* Section Header */}
-        <div className="mx-auto max-w-2xl text-center mb-16">
+        <div
+          className={cn(
+            "mx-auto max-w-2xl text-center mb-16 transition-all duration-700 ease-out",
+            isInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-6"
+          )}
+        >
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#3448FF] animate-pulse" />
             <span className="text-xs font-medium uppercase tracking-wider text-white/50">
@@ -69,7 +80,14 @@ export function Integrations() {
         </div>
 
         {/* Category Filters */}
-        <div className="mb-12 flex flex-wrap justify-center gap-2">
+        <div
+          className={cn(
+            "mb-12 flex flex-wrap justify-center gap-2 transition-all duration-700 delay-150 ease-out",
+            isInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-6"
+          )}
+        >
           {categories.map((category) => (
             <button
               key={category}
@@ -93,12 +111,20 @@ export function Integrations() {
               key={integration.name}
               integration={integration}
               index={index}
+              isVisible={isInView}
             />
           ))}
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 flex flex-col items-center gap-4 text-center">
+        <div
+          className={cn(
+            "mt-16 flex flex-col items-center gap-4 text-center transition-all duration-700 delay-500 ease-out",
+            isInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-6"
+          )}
+        >
           <p className="text-sm text-white/40">
             Don&apos;t see your platform? We support custom integrations.
           </p>
