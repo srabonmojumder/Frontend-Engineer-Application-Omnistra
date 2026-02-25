@@ -39,20 +39,12 @@ export function Integrations() {
     <section
       ref={sectionRef}
       id="integrations"
-      className="relative overflow-hidden bg-[#08144f] py-24 sm:py-32"
+      className="relative overflow-hidden bg-[#08144f] py-20 sm:py-28 lg:py-32"
     >
-      {/* ── Background effects ──────────────────────── */}
       <div className="pointer-events-none absolute inset-0">
-        {/* Top-center glow */}
         <div className="absolute left-1/2 top-0 h-[700px] w-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#3448FF]/[0.08] blur-[140px]" />
-
-        {/* Bottom-right accent */}
         <div className="absolute bottom-0 right-0 h-[500px] w-[700px] translate-x-1/4 translate-y-1/4 rounded-full bg-violet-500/[0.04] blur-[120px]" />
-
-        {/* Bottom-left accent */}
         <div className="absolute bottom-0 left-0 h-[400px] w-[500px] -translate-x-1/4 translate-y-1/4 rounded-full bg-[#3448FF]/[0.05] blur-[100px]" />
-
-        {/* Grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.025]"
           style={{
@@ -64,7 +56,6 @@ export function Integrations() {
       </div>
 
       <Container className="relative z-10">
-        {/* ── Section Header ──────────────────────────── */}
         <div
           className={cn(
             "mx-auto max-w-2xl text-center mb-16 transition-all duration-700 ease-out",
@@ -80,24 +71,23 @@ export function Integrations() {
             </span>
           </div>
 
-          <h2 className="mb-5 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-[3.25rem]">
+          <h2 className="mb-5 text-[2rem] font-bold tracking-tight text-white sm:text-4xl lg:text-[3.25rem] lg:leading-[1.15]">
             Seamlessly connects with{" "}
             <span className="bg-gradient-to-r from-[#3448FF] via-[#6B7AFF] to-violet-400 bg-clip-text text-transparent">
               your stack
             </span>
           </h2>
 
-          <p className="text-base leading-relaxed text-white/45 sm:text-lg">
+          <p className="mx-auto max-w-lg text-[15px] leading-relaxed text-white/45 sm:text-base lg:text-lg">
             Integrate with your existing payment processors, CRMs, and
             collections platforms to create a unified workflow — no
             disruptions, no silos.
           </p>
         </div>
 
-        {/* ── Orbit Visualization ─────────────────────── */}
         <div
           className={cn(
-            "mb-20 transition-all duration-1000 ease-out delay-200",
+            "mb-16 sm:mb-20 transition-all duration-1000 ease-out delay-200",
             isInView
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-10"
@@ -109,8 +99,7 @@ export function Integrations() {
           />
         </div>
 
-        {/* ── Marquee Rows ────────────────────────────── */}
-        <div className="mb-20 flex flex-col gap-4">
+        <div className="mb-16 sm:mb-20 flex flex-col gap-3 sm:gap-4">
           <IntegrationMarquee
             integrations={marqueeRow1}
             direction="left"
@@ -125,11 +114,10 @@ export function Integrations() {
           />
         </div>
 
-        {/* ── Category Filters ────────────────────────── */}
         <div
           ref={gridRef}
           className={cn(
-            "mb-10 flex flex-wrap justify-center gap-2 transition-all duration-700 delay-100 ease-out",
+            "mb-8 sm:mb-10 flex flex-wrap justify-center gap-2 transition-all duration-700 delay-100 ease-out",
             isGridInView
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-6"
@@ -140,7 +128,7 @@ export function Integrations() {
               key={category}
               onClick={() => setActiveCategory(category)}
               className={cn(
-                "rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 cursor-pointer",
+                "rounded-full px-4 sm:px-5 py-2 text-[13px] sm:text-sm font-medium transition-all duration-200 cursor-pointer",
                 activeCategory === category
                   ? "bg-[#3448FF] text-white shadow-[0_0_24px_rgba(52,72,255,0.35)]"
                   : "bg-white/[0.04] text-white/50 hover:bg-white/[0.08] hover:text-white/70 border border-white/[0.06]"
@@ -151,7 +139,6 @@ export function Integrations() {
           ))}
         </div>
 
-        {/* ── Integration Grid ────────────────────────── */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-4">
           {filteredIntegrations.map((integration, index) => (
             <IntegrationCard
@@ -163,7 +150,6 @@ export function Integrations() {
           ))}
         </div>
 
-        {/* ── Bottom CTA ──────────────────────────────── */}
         <div
           className={cn(
             "mt-16 flex flex-col items-center gap-4 text-center transition-all duration-700 delay-300 ease-out",

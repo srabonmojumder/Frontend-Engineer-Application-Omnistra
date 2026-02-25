@@ -3,15 +3,13 @@ import { Button } from "@/components/ui/Button";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#f8f9fc] to-white pt-32 pb-24 sm:pt-40 sm:pb-32">
-      {/* Background decorative elements */}
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#f8f9fc] to-white pt-24 pb-20 sm:pt-32 sm:pb-28">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-20 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#3448FF]/[0.04] blur-[100px]" />
       </div>
 
       <Container className="relative z-10">
         <div className="mx-auto max-w-3xl text-center">
-          {/* Badge */}
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#e6ebf0] bg-white px-4 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-sm font-medium text-[#6b7280]">

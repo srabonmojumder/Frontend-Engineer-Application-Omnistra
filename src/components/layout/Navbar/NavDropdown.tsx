@@ -63,7 +63,7 @@ export function NavDropdown({ items, isOpen, onClose }: NavDropdownProps) {
           : "opacity-0 -translate-y-2 scale-[0.96] pointer-events-none"
       )}
     >
-      <div className="min-w-[300px] rounded-2xl border border-[#e6ebf0] bg-white p-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)]">
+      <div className="min-w-[320px] max-w-[380px] rounded-2xl border border-[#e6ebf0] bg-white p-2 shadow-[0_20px_60px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04)]">
         <div className="flex flex-col gap-0.5">
           {items.map((item) => (
             <a
@@ -71,9 +71,9 @@ export function NavDropdown({ items, isOpen, onClose }: NavDropdownProps) {
               href={item.href}
               role="menuitem"
               tabIndex={isOpen ? 0 : -1}
-              className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-150 hover:bg-[#f4f6f8]"
+              className="group flex items-start gap-3 rounded-xl px-3 py-3 transition-all duration-150 hover:bg-[#f4f6f8]"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f4f6f8] text-[#6b7280] transition-all duration-150 group-hover:bg-white group-hover:text-[#3448FF] group-hover:shadow-[0_2px_8px_rgba(52,72,255,0.12)]">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f4f6f8] text-[#6b7280] transition-all duration-200 group-hover:bg-white group-hover:text-[#3448FF] group-hover:shadow-[0_2px_8px_rgba(52,72,255,0.12)]">
                 <NavIcon name={item.icon} className="h-[18px] w-[18px]" />
               </span>
 
@@ -94,7 +94,7 @@ export function NavDropdown({ items, isOpen, onClose }: NavDropdownProps) {
                   )}
                 </span>
                 {item.description && (
-                  <span className="text-xs text-[#6b7280] mt-0.5 leading-snug">
+                  <span className="text-[11.5px] text-[#6b7280] mt-0.5 leading-relaxed line-clamp-2">
                     {item.description}
                   </span>
                 )}

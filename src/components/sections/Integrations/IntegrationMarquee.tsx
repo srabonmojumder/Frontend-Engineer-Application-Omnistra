@@ -18,11 +18,6 @@ const speedMap = {
   fast: "25s",
 };
 
-/**
- * Infinite horizontal scrolling marquee of integration logos.
- * Duplicates the list to create a seamless loop.
- * Pauses on hover for accessibility.
- */
 export function IntegrationMarquee({
   integrations,
   direction = "left",
@@ -41,13 +36,12 @@ export function IntegrationMarquee({
         className
       )}
     >
-      {/* Fade edges */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#08144f] to-transparent sm:w-40" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-[#08144f] to-transparent sm:w-40" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#08144f] to-transparent sm:w-32 lg:w-40" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#08144f] to-transparent sm:w-32 lg:w-40" />
 
       <div
         className={cn(
-          "flex w-max gap-4 sm:gap-6",
+          "flex w-max gap-3 sm:gap-4",
           direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
         )}
         style={{ "--marquee-duration": speedMap[speed] } as React.CSSProperties}
@@ -55,12 +49,12 @@ export function IntegrationMarquee({
         {items.map((integration, i) => (
           <div
             key={`${integration.name}-${i}`}
-            className="group flex shrink-0 items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.07]"
+            className="group flex shrink-0 items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 sm:py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.07]"
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] transition-colors duration-300 group-hover:bg-white/[0.12]">
               <IntegrationLogo name={integration.logo} className="h-6 w-6" />
             </div>
-            <span className="text-sm font-medium text-white/60 transition-colors duration-300 group-hover:text-white/90">
+            <span className="text-[13px] sm:text-sm font-medium text-white/60 transition-colors duration-300 group-hover:text-white/90 whitespace-nowrap">
               {integration.name}
             </span>
           </div>

@@ -103,7 +103,7 @@ export function MobileMenu({ isOpen, items, onClose }: MobileMenuProps) {
       aria-modal="true"
       aria-label="Mobile navigation"
       className={cn(
-        "fixed inset-x-0 top-[72px] bottom-0 z-40 overflow-y-auto bg-white",
+        "fixed inset-x-0 top-[68px] bottom-0 z-40 overflow-y-auto bg-white",
         "transition-all duration-300 ease-[cubic-bezier(0.77,0,0.18,1)] lg:hidden",
         isOpen
           ? "opacity-100 translate-y-0 pointer-events-auto"

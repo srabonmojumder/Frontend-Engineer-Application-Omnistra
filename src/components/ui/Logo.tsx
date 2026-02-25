@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 
 interface LogoProps {
@@ -6,8 +7,7 @@ interface LogoProps {
 
 export function Logo({ className }: LogoProps) {
   return (
-    <a href="/" className={cn("flex items-center gap-2.5", className)} aria-label="Chargeflow Home">
-      {/* Chargeflow-inspired logo mark */}
+    <Link href="/" className={cn("flex items-center gap-2.5", className)} aria-label="Chargeflow Home">
       <svg
         width="32"
         height="32"
@@ -34,6 +34,6 @@ export function Logo({ className }: LogoProps) {
       <span className="text-lg font-bold tracking-tight">
         chargeflow
       </span>
-    </a>
+    </Link>
   );
 }

@@ -9,6 +9,7 @@ import { Logo } from "@/components/ui/Logo";
 import { NavIcon } from "./NavIcon";
 import { NavDropdown } from "./NavDropdown";
 import { MobileMenu } from "./MobileMenu";
+import { AnnouncementBar } from "./AnnouncementBar";
 import { navItems } from "./navData";
 
 export function Navbar() {
@@ -28,7 +29,7 @@ export function Navbar() {
   const handleMouseLeave = useCallback(() => {
     closeTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
-    }, 120);
+    }, 150);
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
@@ -67,25 +68,25 @@ export function Navbar() {
 
   return (
     <>
+      <AnnouncementBar />
+
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50",
-          "transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-out",
+          "sticky top-0 left-0 right-0 z-50",
+          "transition-all duration-300 ease-out",
           isScrolled || isMobileMenuOpen
-            ? "bg-white/80 backdrop-blur-2xl border-b border-black/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-            : "bg-transparent border-b border-transparent"
+            ? "bg-white/85 backdrop-blur-2xl border-b border-black/[0.06] shadow-[0_1px_4px_rgba(0,0,0,0.03)]"
+            : "bg-white/0 border-b border-transparent"
         )}
       >
         <Container>
           <nav
-            className="flex h-[72px] items-center justify-between gap-4"
+            className="flex h-[68px] items-center justify-between"
             role="navigation"
             aria-label="Main navigation"
           >
-            {/* Logo */}
             <Logo />
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-0.5">
               {navItems.map((item) => (
                 <div
@@ -143,7 +144,6 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* CTA Buttons */}
             <div className="hidden lg:flex items-center gap-2.5">
               <Button variant="ghost" size="sm">
                 Sign In
@@ -152,7 +152,6 @@ export function Navbar() {
                 Sign Up
               </Button>
 
-              {/* Primary CTA — sonar rotating border effect */}
               <div className="relative rounded-full overflow-hidden p-[1.5px] group">
                 <div
                   className="sonar-border absolute inset-[-20%] opacity-50 group-hover:opacity-100 transition-opacity duration-300"
@@ -164,7 +163,6 @@ export function Navbar() {
               </div>
             </div>
 
-            {/* Mobile Menu Toggle */}
             <button
               className={cn(
                 "flex lg:hidden items-center justify-center h-10 w-10 rounded-lg transition-colors cursor-pointer",
@@ -191,7 +189,6 @@ export function Navbar() {
         onClose={closeMobileMenu}
       />
 
-      {/* Background overlay when mobile menu is open */}
       <div
         className={cn(
           "fixed inset-0 z-30 bg-black/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden",

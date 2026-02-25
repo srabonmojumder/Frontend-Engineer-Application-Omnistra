@@ -2,16 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
-/**
- * Detects when an element enters the viewport.
- * Fires once by default — useful for entrance animations.
- */
 export function useInView<T extends HTMLElement = HTMLDivElement>(
   options?: IntersectionObserverInit & { once?: boolean }
 ) {
   const ref = useRef<T>(null);
   const [isInView, setIsInView] = useState(false);
-  const { once = true, ...observerOptions } = options ?? {};
+
+  const once = options?.once ?? true;
+  const threshold = options?.threshold ?? 0.1;
+  const rootMargin = options?.rootMargin;
 
   useEffect(() => {
     const element = ref.current;
@@ -26,12 +25,12 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
           setIsInView(false);
         }
       },
-      { threshold: 0.1, ...observerOptions }
+      { threshold, rootMargin }
     );
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, [once, observerOptions.threshold, observerOptions.rootMargin]);
+  }, [once, threshold, rootMargin]);
 
   return { ref, isInView };
 }

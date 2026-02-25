@@ -20,7 +20,8 @@ export const navItems: NavItem[] = [
       {
         label: "Prevent",
         href: "#",
-        description: "Stop chargebacks before they happen",
+        description:
+          "Stop friendly fraud, block digital shoplifters & prevent the next chargeback before it happens",
         badge: "NEW",
         badgeColor: "bg-emerald-500",
         icon: "shield",
@@ -28,19 +29,22 @@ export const navItems: NavItem[] = [
       {
         label: "Automation",
         href: "#",
-        description: "Automate your dispute management",
+        description:
+          "Fully automated chargeback recovery with 4x ROI guarantee",
         icon: "zap",
       },
       {
         label: "Alerts",
         href: "#",
-        description: "Get notified on dispute activity",
+        description:
+          "Cut 90% of chargebacks before they happen, powered by Visa and Mastercard",
         icon: "bell",
       },
       {
         label: "Insights",
         href: "#",
-        description: "Analytics and reporting dashboard",
+        description:
+          "Get a bird's-eye view into your payments and chargebacks",
         badge: "FREE",
         badgeColor: "bg-[#3448FF]",
         icon: "chart",
@@ -48,7 +52,8 @@ export const navItems: NavItem[] = [
       {
         label: "Connect",
         href: "#",
-        description: "For platforms and marketplaces",
+        description:
+          "Integrate Chargeflow into your platform via Embedding, Whitelabel or API",
         badge: "FOR PLATFORMS",
         badgeColor: "bg-violet-500",
         icon: "link",
@@ -67,25 +72,25 @@ export const navItems: NavItem[] = [
       {
         label: "Obvi",
         href: "#",
-        description: "Health & wellness brand",
+        description: "eCommerce",
         icon: "star",
       },
       {
         label: "Elementor",
         href: "#",
-        description: "Website builder platform",
+        description: "SaaS",
         icon: "star",
       },
       {
-        label: "Wordtune",
+        label: "Fanatics",
         href: "#",
-        description: "AI writing assistant",
+        description: "Marketplace",
         icon: "star",
       },
       {
-        label: "Kyte",
+        label: "HexClad",
         href: "#",
-        description: "Point of sale solution",
+        description: "Travel",
         icon: "star",
       },
     ],
