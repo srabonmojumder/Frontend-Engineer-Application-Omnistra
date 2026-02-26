@@ -7,7 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 import { NavIcon } from "./NavIcon";
-import { NavDropdown } from "./NavDropdown";
+import { MegaMenu } from "./MegaMenu";
 import { MobileMenu } from "./MobileMenu";
 import { AnnouncementBar } from "./AnnouncementBar";
 import { navItems } from "./navData";
@@ -30,6 +30,13 @@ export function Navbar() {
     closeTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
     }, 150);
+  }, []);
+
+  const handleMegaMenuEnter = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
@@ -66,6 +73,9 @@ export function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
+  const hasActiveDropdown =
+    activeDropdown !== null && activeDropdown !== "Pricing";
+
   return (
     <>
       <AnnouncementBar />
@@ -74,7 +84,7 @@ export function Navbar() {
         className={cn(
           "sticky top-0 left-0 right-0 z-50",
           "transition-all duration-300 ease-out",
-          isScrolled || isMobileMenuOpen
+          isScrolled || isMobileMenuOpen || hasActiveDropdown
             ? "bg-white/85 backdrop-blur-2xl border-b border-black/[0.06] shadow-[0_1px_4px_rgba(0,0,0,0.03)]"
             : "bg-white/0 border-b border-transparent"
         )}
@@ -132,14 +142,6 @@ export function Navbar() {
                       {item.label}
                     </a>
                   )}
-
-                  {item.dropdown && (
-                    <NavDropdown
-                      items={item.dropdown}
-                      isOpen={activeDropdown === item.label}
-                      onClose={() => setActiveDropdown(null)}
-                    />
-                  )}
                 </div>
               ))}
             </div>
@@ -181,6 +183,15 @@ export function Navbar() {
             </button>
           </nav>
         </Container>
+
+        {/* Mega Menu — desktop only */}
+        <div className="hidden lg:block">
+          <MegaMenu
+            activeMenu={activeDropdown}
+            onMouseEnter={handleMegaMenuEnter}
+            onMouseLeave={handleMouseLeave}
+          />
+        </div>
       </header>
 
       <MobileMenu
@@ -189,6 +200,19 @@ export function Navbar() {
         onClose={closeMobileMenu}
       />
 
+      {/* Backdrop — mega menu */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 hidden lg:block",
+          hasActiveDropdown
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setActiveDropdown(null)}
+        aria-hidden="true"
+      />
+
+      {/* Backdrop — mobile menu */}
       <div
         className={cn(
           "fixed inset-0 z-30 bg-black/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden",

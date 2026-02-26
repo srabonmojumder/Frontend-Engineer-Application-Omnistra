@@ -5,6 +5,10 @@ export interface NavDropdownItem {
   badge?: string;
   badgeColor?: string;
   icon: string;
+  stat?: string;
+  statSuffix?: string;
+  statLabel?: string;
+  category?: string;
 }
 
 export interface NavItem {
@@ -21,41 +25,41 @@ export const navItems: NavItem[] = [
         label: "Prevent",
         href: "#",
         description:
-          "Stop friendly fraud, block digital shoplifters & prevent the next chargeback before it happens",
+          "Stop friendly fraud, block digital shoplifters & prevent the next chargeback before it happens.",
         badge: "NEW",
-        badgeColor: "bg-emerald-500",
+        badgeColor: "bg-lime-400 text-black",
         icon: "shield",
       },
       {
         label: "Automation",
         href: "#",
         description:
-          "Fully automated chargeback recovery with 4x ROI guarantee",
+          "Fully automated chargeback recovery with 4x ROI guarantee.",
         icon: "zap",
       },
       {
         label: "Alerts",
         href: "#",
         description:
-          "Cut 90% of chargebacks before they happen, powered by Visa and Mastercard",
+          "Cut 90% of chargebacks before they happen, powered by Visa and Mastercard.",
         icon: "bell",
       },
       {
         label: "Insights",
         href: "#",
         description:
-          "Get a bird's-eye view into your payments and chargebacks",
+          "Get a bird's-eye view into your payments and chargebacks, all in a single, powerful dashboard.",
         badge: "FREE",
-        badgeColor: "bg-[#3448FF]",
+        badgeColor: "border border-white/20 text-white/70",
         icon: "chart",
       },
       {
         label: "Connect",
         href: "#",
         description:
-          "Integrate Chargeflow into your platform via Embedding, Whitelabel or API",
+          "Integrate Chargeflow into your platform, either via Embedding, Whitelabel or API.",
         badge: "FOR PLATFORMS",
-        badgeColor: "bg-violet-500",
+        badgeColor: "border border-white/20 text-white/70",
         icon: "link",
       },
     ],
@@ -70,28 +74,44 @@ export const navItems: NavItem[] = [
         icon: "users",
       },
       {
-        label: "Obvi",
+        label: "obvi.",
         href: "#",
         description: "eCommerce",
         icon: "star",
+        stat: "170",
+        statSuffix: " %",
+        statLabel: "win-rate increase",
+        category: "eCommerce",
       },
       {
-        label: "Elementor",
+        label: "elementor",
         href: "#",
         description: "SaaS",
         icon: "star",
+        stat: "90",
+        statSuffix: " %",
+        statLabel: "reduction in time spent managing chargebacks",
+        category: "SaaS",
       },
       {
         label: "Fanatics",
         href: "#",
         description: "Marketplace",
         icon: "star",
+        stat: "2X",
+        statSuffix: "",
+        statLabel: "Chargeback Win Rate",
+        category: "Marketplace",
       },
       {
         label: "HexClad",
         href: "#",
         description: "Travel",
         icon: "star",
+        stat: "328",
+        statSuffix: " hrs.",
+        statLabel: "and 40 minutes saved",
+        category: "Travel",
       },
     ],
   },
@@ -105,25 +125,25 @@ export const navItems: NavItem[] = [
       {
         label: "All Integrations",
         href: "#",
-        description: "Browse all available integrations",
+        description: "Choose from hundreds of integrated platforms.",
         icon: "grid",
       },
       {
         label: "Stripe",
         href: "#",
-        description: "Payment processing",
+        description: "#1 Chargeback Solution for Stripe Merchants",
         icon: "credit-card",
       },
       {
         label: "Shopify",
         href: "#",
-        description: "E-commerce platform",
+        description: "Powering 30k+ Shopify Merchants",
         icon: "shopping-bag",
       },
       {
         label: "WooCommerce",
         href: "#",
-        description: "WordPress commerce",
+        description: "Native WooCommerce Integration",
         icon: "shopping-cart",
       },
     ],
@@ -138,12 +158,6 @@ export const navItems: NavItem[] = [
         icon: "book",
       },
       {
-        label: "Webinars",
-        href: "#",
-        description: "Live and recorded sessions",
-        icon: "video",
-      },
-      {
         label: "Reports",
         href: "#",
         description: "Industry insights and data",
@@ -154,6 +168,12 @@ export const navItems: NavItem[] = [
         href: "#",
         description: "Listen to expert conversations",
         icon: "mic",
+      },
+      {
+        label: "Webinars",
+        href: "#",
+        description: "Live and recorded sessions",
+        icon: "video",
       },
       {
         label: "ROI Calculator",
@@ -173,9 +193,9 @@ export const navItems: NavItem[] = [
     label: "Company",
     dropdown: [
       {
-        label: "Who we are",
+        label: "Who We Are",
         href: "#",
-        description: "Our mission and team",
+        description: "The story behind the Chargeflow.",
         icon: "heart",
       },
       {
@@ -185,19 +205,21 @@ export const navItems: NavItem[] = [
         icon: "palette",
       },
       {
+        label: "Careers",
+        href: "#",
+        description: "Join our growing team",
+        badge: "We're Hiring!",
+        badgeColor: "bg-[#3448FF] text-white",
+        icon: "briefcase",
+      },
+      {
         label: "Become a Partner",
         href: "#",
         description: "Join our partner program",
         icon: "handshake",
       },
       {
-        label: "Careers",
-        href: "#",
-        description: "Join our growing team",
-        icon: "briefcase",
-      },
-      {
-        label: "Contact us",
+        label: "Contact Us",
         href: "#",
         description: "Get in touch",
         icon: "mail",
