@@ -1,186 +1,223 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { cn } from "@/lib/cn";
 import { useInView } from "@/hooks/useInView";
-import { Container } from "@/components/ui/Container";
-import { IntegrationCard } from "./IntegrationCard";
-import { OrbitHub } from "./OrbitHub";
-import { IntegrationMarquee } from "./IntegrationMarquee";
-import {
-  integrations,
-  categories,
-  marqueeRow1,
-  marqueeRow2,
-  type IntegrationCategory,
-} from "./integrationsData";
+import { useScrollProgress } from "@/hooks/useScrollProgress";
+import { IntegrationIcon } from "./IntegrationIcon";
+import { ConnectionLines } from "./ConnectionLines";
+import { integrations } from "./integrationsData";
+
+/* ── Types ──────────────────────────────────────────── */
+
+interface IconLayoutItem {
+  /** Index into the integrations array */
+  integrationIndex: number;
+  /** Starting x position (% of container width) */
+  x: number;
+  /** Starting y position (% of container height) */
+  y: number;
+  /** Icon size variant */
+  size: "sm" | "md" | "lg";
+}
+
+/* ── Layout configuration ───────────────────────────── */
+
+// Scattered icon positions matching the network-style design.
+// Positions avoid the center text area (~35–65% x, ~35–58% y).
+const iconLayout: IconLayoutItem[] = [
+  { integrationIndex: 9,  x: 20, y: 11, size: "md" },  // NICE — top-left
+  { integrationIndex: 10, x: 44, y: 10, size: "md" },  // Genesys — top-center
+  { integrationIndex: 7,  x: 59, y: 12, size: "md" },  // HubSpot — top-center-right
+  { integrationIndex: 11, x: 80, y: 11, size: "sm" },  // Five9 — top-right
+  { integrationIndex: 1,  x: 25, y: 30, size: "lg" },  // Easypay — left
+  { integrationIndex: 0,  x: 80, y: 28, size: "lg" },  // Stripe — right
+  { integrationIndex: 6,  x: 32, y: 52, size: "md" },  // Salesforce — center-left
+  { integrationIndex: 4,  x: 26, y: 73, size: "md" },  // Repay — bottom-left
+  { integrationIndex: 2,  x: 53, y: 78, size: "lg" },  // Fiserv — bottom-center
+  { integrationIndex: 12, x: 80, y: 72, size: "md" },  // RingCentral — bottom-right
+];
+
+/* ── Math helpers ───────────────────────────────────── */
+
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+/* ── Component ──────────────────────────────────────── */
 
 export function Integrations() {
-  const [activeCategory, setActiveCategory] =
-    useState<IntegrationCategory>("All");
+  const { ref: scrollRef, progress } = useScrollProgress<HTMLElement>();
 
-  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+  const { ref: viewRef, isInView } = useInView<HTMLDivElement>({
     threshold: 0.05,
+    once: true,
   });
 
-  const { ref: gridRef, isInView: isGridInView } = useInView<HTMLDivElement>({
-    threshold: 0.1,
-  });
+  // ── Derived animation values ────────────────────────
 
-  const filteredIntegrations = useMemo(
-    () =>
-      activeCategory === "All"
-        ? integrations
-        : integrations.filter((i) => i.category === activeCategory),
-    [activeCategory]
-  );
+  // Heading + CTA fade out quickly as convergence begins
+  const contentOpacity = Math.max(0, 1 - progress * 3);
+  const contentScale = lerp(1, 0.96, Math.min(progress * 2, 1));
+
+  // Brand logo fades in after icons converge (70–100%)
+  const brandT = Math.max(0, (progress - 0.7) / 0.3);
+  const brandEased = easeOutCubic(brandT);
+  const brandOpacity = brandEased;
+  const brandScale = lerp(0.55, 1, brandEased);
 
   return (
     <section
-      ref={sectionRef}
+      ref={scrollRef}
       id="integrations"
-      className="relative overflow-hidden bg-[#08144f] py-20 sm:py-28 lg:py-32"
+      className="relative h-[200vh] md:h-[250vh] lg:h-[280vh]"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-[700px] w-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#3448FF]/[0.08] blur-[140px]" />
-        <div className="absolute bottom-0 right-0 h-[500px] w-[700px] translate-x-1/4 translate-y-1/4 rounded-full bg-violet-500/[0.04] blur-[120px]" />
-        <div className="absolute bottom-0 left-0 h-[400px] w-[500px] -translate-x-1/4 translate-y-1/4 rounded-full bg-[#3448FF]/[0.05] blur-[100px]" />
+      {/* Sticky viewport — stays pinned while user scrolls the tall container */}
+      <div
+        ref={viewRef}
+        className="sticky top-0 flex h-screen items-center justify-center overflow-hidden bg-[#eef0f8]"
+      >
+        {/* ── Network connection lines ───────────────── */}
+        <ConnectionLines progress={progress} isVisible={isInView} />
+
+        {/* ── Scattered integration icons ────────────── */}
+        {iconLayout.map((item, i) => (
+          <IntegrationIcon
+            key={integrations[item.integrationIndex].name}
+            integration={integrations[item.integrationIndex]}
+            startPosition={{ x: item.x, y: item.y }}
+            progress={progress}
+            size={item.size}
+            index={i}
+            isVisible={isInView}
+          />
+        ))}
+
+        {/* ── Center content: heading + CTA ──────────── */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6"
           style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-            backgroundSize: "72px 72px",
+            opacity: contentOpacity,
+            transform: `scale(${contentScale})`,
+            willChange: "transform, opacity",
           }}
-        />
-      </div>
-
-      <Container className="relative z-10">
-        <div
-          className={cn(
-            "mx-auto max-w-2xl text-center mb-16 transition-all duration-700 ease-out",
-            isInView
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-8"
-          )}
         >
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#3448FF] animate-pulse" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-white/50">
-              Integrations
-            </span>
-          </div>
-
-          <h2 className="mb-5 text-[2rem] font-bold tracking-tight text-white sm:text-4xl lg:text-[3.25rem] lg:leading-[1.15]">
-            Seamlessly connects with{" "}
-            <span className="bg-gradient-to-r from-[#3448FF] via-[#6B7AFF] to-violet-400 bg-clip-text text-transparent">
-              your stack
-            </span>
+          <h2
+            className={cn(
+              "mb-6 max-w-xl text-center font-bold tracking-tight text-[#0a1a4a]",
+              "text-[1.75rem] leading-[1.2] sm:text-4xl lg:text-[3.25rem] lg:leading-[1.12]"
+            )}
+          >
+            One platform,
+            <br />
+            unlimited integrations
           </h2>
 
-          <p className="mx-auto max-w-lg text-[15px] leading-relaxed text-white/45 sm:text-base lg:text-lg">
-            Integrate with your existing payment processors, CRMs, and
-            collections platforms to create a unified workflow — no
-            disruptions, no silos.
-          </p>
-        </div>
-
-        <div
-          className={cn(
-            "mb-16 sm:mb-20 transition-all duration-1000 ease-out delay-200",
-            isInView
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-10"
-          )}
-        >
-          <OrbitHub
-            integrations={integrations.slice(0, 8)}
-            isVisible={isInView}
-          />
-        </div>
-
-        <div className="mb-16 sm:mb-20 flex flex-col gap-3 sm:gap-4">
-          <IntegrationMarquee
-            integrations={marqueeRow1}
-            direction="left"
-            speed="normal"
-            isVisible={isInView}
-          />
-          <IntegrationMarquee
-            integrations={marqueeRow2}
-            direction="right"
-            speed="slow"
-            isVisible={isInView}
-          />
-        </div>
-
-        <div
-          ref={gridRef}
-          className={cn(
-            "mb-8 sm:mb-10 flex flex-wrap justify-center gap-2 transition-all duration-700 delay-100 ease-out",
-            isGridInView
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-6"
-          )}
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={cn(
-                "rounded-full px-4 sm:px-5 py-2 text-[13px] sm:text-sm font-medium transition-all duration-200 cursor-pointer",
-                activeCategory === category
-                  ? "bg-[#3448FF] text-white shadow-[0_0_24px_rgba(52,72,255,0.35)]"
-                  : "bg-white/[0.04] text-white/50 hover:bg-white/[0.08] hover:text-white/70 border border-white/[0.06]"
-              )}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:gap-4">
-          {filteredIntegrations.map((integration, index) => (
-            <IntegrationCard
-              key={integration.name}
-              integration={integration}
-              index={index}
-              isVisible={isGridInView}
-            />
-          ))}
-        </div>
-
-        <div
-          className={cn(
-            "mt-16 flex flex-col items-center gap-4 text-center transition-all duration-700 delay-300 ease-out",
-            isGridInView
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-6"
-          )}
-        >
-          <p className="text-sm text-white/35">
-            Don&apos;t see your platform? We support custom integrations.
-          </p>
           <a
             href="#"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.04] px-6 py-3 text-sm font-medium text-white/70 transition-all duration-300 hover:border-[#3448FF]/50 hover:bg-[#3448FF]/10 hover:text-white"
+            className={cn(
+              "pointer-events-auto inline-flex items-center gap-2.5 rounded-full",
+              "bg-[#3448FF] px-6 py-3 text-sm font-semibold text-white",
+              "shadow-[0_2px_12px_rgba(52,72,255,0.35)]",
+              "transition-all duration-300",
+              "hover:bg-[#2a3ee0] hover:shadow-[0_4px_20px_rgba(52,72,255,0.5)]"
+            )}
           >
-            Request an Integration
-            <svg
-              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
+            View all integrations
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
+              <svg
+                className="h-3 w-3"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4.5 3l3 3-3 3" />
+              </svg>
+            </span>
           </a>
         </div>
-      </Container>
+
+        {/* ── Brand logo (appears after convergence) ─── */}
+        <div
+          className="absolute z-20"
+          style={{
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%, -50%) scale(${brandScale})`,
+            opacity: brandOpacity,
+            willChange: "transform, opacity",
+          }}
+        >
+          <div
+            className={cn(
+              "flex items-center justify-center rounded-2xl sm:rounded-3xl",
+              "bg-[#1a3eff] shadow-[0_8px_40px_rgba(26,62,255,0.3)]",
+              "h-20 w-20 sm:h-24 sm:w-24"
+            )}
+          >
+            {/* Omnistra "D" mark */}
+            {/* <svg
+              className="h-10 w-10 sm:h-12 sm:w-12"
+              viewBox="0 0 48 48"
+              fill="none"
+            >
+              <circle cx="19" cy="24" r="5" fill="white" />
+              <path
+                d="M23 10 A14 14 0 0 1 23 38"
+                stroke="white"
+                strokeWidth="5"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg> */}
+            <svg className="h-10 w-10 sm:h-12 sm:w-12 shrink-0"
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              fill="none"
+            >
+              <rect width="32" height="32" rx="8" fill="#3448FF" />
+              <path
+                d="M10 16C10 12.6863 12.6863 10 16 10C17.5913 10 19.0348 10.6028 20.1262 11.5945"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M22 16C22 19.3137 19.3137 22 16 22C14.4087 22 12.9652 21.3972 11.8738 20.4055"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="20.5" cy="11.5" r="1.5" fill="white" />
+              <circle cx="11.5" cy="20.5" r="1.5" fill="white" />
+            </svg>
+          </div>
+        </div>
+
+        {/* ── Center vertical dashed line (final state) ─ */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          style={{ opacity: brandOpacity * 0.4 }}
+          aria-hidden="true"
+        >
+          <line
+            x1="50%"
+            y1="0"
+            x2="50%"
+            y2="100%"
+            stroke="rgba(180, 186, 215, 0.5)"
+            strokeWidth="1"
+            strokeDasharray="6 4"
+          />
+        </svg>
+      </div>
     </section>
   );
 }
