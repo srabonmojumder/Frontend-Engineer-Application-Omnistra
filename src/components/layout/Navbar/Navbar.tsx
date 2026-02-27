@@ -147,9 +147,9 @@ export function Navbar() {
             </div>
 
             <div className="hidden lg:flex items-center gap-2.5">
-              <Button variant="ghost" size="sm">
+              {/* <Button variant="ghost" size="sm">
                 Sign In
-              </Button>
+              </Button> */}
               <Button variant="secondary" size="sm">
                 Sign Up
               </Button>
